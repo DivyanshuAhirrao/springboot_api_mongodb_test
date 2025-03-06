@@ -1,17 +1,22 @@
-# Use Java 21 base image
-FROM eclipse-temurin:21-jdk
-
-# Set working directory inside the container
+# Use the Maven image to build the application
+FROM maven:3.8.5-openjdk-17 AS build
+# Set the working directory inside the container
 WORKDIR /app
-
-# Copy the JAR file from target/ to the container
-COPY target/*.jar practise-0.0.1-SNAPSHOT.jar
-
-# Expose port 8080 (default for Spring Boot)
+# Copy the current directory contents into the container at /app
+COPY . /app
+# Package the application, skipping the tests
+RUN mvn clean package -DskipTests
+# Use a slim version of OpenJDK 17 for the runtime environment
+FROM openjdk:17.0.1-jdk-slim
+# Set the working directory for the runtime image
+WORKDIR /app
+# Copy the packaged jar from the build stage
+COPY --from=build /app/target/practise-0.0.1-SNAPSHOT.jar /app/jwt.jar
+# Expose the port the application will run on
 EXPOSE 8080
 
 # Define environment variable for MongoDB connection
 ENV MONGO_URI=mongodb+srv://DivyanshuAhirrao:Dadu%401699@roamingo.jodfp.mongodb.net/?retryWrites=true&w=majority&appName=Roamingo
 
 # Run the application
-ENTRYPOINT ["java", "-jar", "practise-0.0.1-SNAPSHOT.jar"]
+ENTRYPOINT ["java", "-jar", "jwt.jar"]
