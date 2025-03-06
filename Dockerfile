@@ -5,7 +5,7 @@ FROM eclipse-temurin:21-jdk
 WORKDIR /app
 
 # Copy the JAR file from target/ to the container
-COPY target/*.jar app.jar
+COPY target/*.jar practise-0.0.1-SNAPSHOT.jar
 
 # Expose port 8080 (default for Spring Boot)
 EXPOSE 8080
@@ -14,4 +14,4 @@ EXPOSE 8080
 ENV MONGO_URI=mongodb+srv://DivyanshuAhirrao:Dadu%401699@roamingo.jodfp.mongodb.net/?retryWrites=true&w=majority&appName=Roamingo
 
 # Run the application
-ENTRYPOINT ["java", "-jar", "app.jar"]
+ENTRYPOINT ["java", "-jar", "practise-0.0.1-SNAPSHOT.jar"]
